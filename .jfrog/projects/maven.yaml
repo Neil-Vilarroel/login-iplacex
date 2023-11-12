@@ -1,0 +1,10 @@
+version: 1
+type: maven
+resolver:
+    serverId: nvillarroel
+    snapshotRepo: default-maven-virtual
+    releaseRepo: default-maven-virtual
+deployer:
+    serverId: nvillarroel
+    snapshotRepo: default-maven-virtual
+    releaseRepo: default-maven-virtual
