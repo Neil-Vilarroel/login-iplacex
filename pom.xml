@@ -43,6 +43,12 @@
             </plugin>
         </plugins>
     </build>
-    
+    <distributionManagement>
+    <repository>
+        <id>central</id>
+        <name>b0ddm5a6ki2jp-artifactory-primary-0-releases</name>
+        <url>https://nvillarroel.jfrog.io/artifactory/default-libs-release</url>
+    </repository>
+</distributionManagement>
 </project>
 
