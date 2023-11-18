@@ -37,16 +37,20 @@ pipeline {
         }
         */
 
-        stage('Upload to Artifactory') {
-            agent any
-            steps {
-                script {
-                    // Configurar el entorno Docker aquí si es necesario
-                    // docker.image('releases-docker.jfrog.io/jfrog/jfrog-cli-v2:2.2.0').run('-v', '/var/run/docker.sock:/var/run/docker.sock')
-                    bat 'jfrog rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token ${ARTIFACTORY_ACCESS_TOKEN} target/construction-project-1.0-SNAPSHOT.war java-web-app/'
-                }
-            }
+stage('Upload to Artifactory') {
+    agent {
+        docker {
+            image 'releases-docker.jfrog.io/jfrog/jfrog-cli-v2:2.2.0' 
+            reuseNode true
         }
+    }
+    steps {
+        script {
+            bat 'jfrog rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token %ARTIFACTORY_ACCESS_TOKEN% target/construction-project-1.0-SNAPSHOT.war java-web-app/'
+        }
+    }
+}
+
 
         stage('Pruebas') {
             steps {
