@@ -28,7 +28,14 @@ pipeline {
 
         stage('Upload to Artifactory') {
             steps {
-                bat 'jfrog rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token ${ARTIFACTORY_ACCESS_TOKEN} target/construction-project-1.0-SNAPSHOT.war java-web-app/'
+                script {
+                    // Configuración del contenedor Docker
+                    def dockerImage = 'releases-docker.jfrog.io/jfrog/jfrog-cli-v2:2.2.0'
+                    def dockerOptions = '-v ${JENKINS_HOME}/.jfrog:/root/.jfrog'
+                    
+                    // Subir el archivo a Artifactory usando JFrog CLI en el contenedor Docker
+                    sh "docker run ${dockerOptions} ${dockerImage} jfrog rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token ${ARTIFACTORY_ACCESS_TOKEN} target/construction-project-1.0-SNAPSHOT.war java-web-app/"
+                }
             }
         }
 
