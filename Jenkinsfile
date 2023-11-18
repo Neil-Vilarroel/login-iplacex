@@ -41,13 +41,14 @@ stage('Upload to Artifactory') {
 
             if (jfrogCommand) {
                 echo "JFrog CLI encontrado en la ruta: ${jfrogCommand}"
-                bat "${jfrogCommand} rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token %ARTIFACTORY_ACCESS_TOKEN% --flat target/construction-project-1.0-SNAPSHOT.war"
+                bat label: '', script: "${jfrogCommand} rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token %ARTIFACTORY_ACCESS_TOKEN% --flat target/construction-project-1.0-SNAPSHOT.war"
             } else {
                 error 'JFrog CLI no encontrado. Asegúrate de que esté instalado y disponible en el PATH.'
             }
         }
     }
 }
+
 
         stage('Pruebas') {
             steps {
