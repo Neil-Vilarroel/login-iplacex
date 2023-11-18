@@ -37,18 +37,17 @@ pipeline {
 stage('Upload to Artifactory') {
     steps {
         script {
-            def jfrogCommand = bat(script: 'where jfrog', returnStdout: true).trim()
-
-            if (jfrogCommand) {
-                echo "JFrog CLI encontrado en la ruta: ${jfrogCommand}"
-                bat label: '', script: "${jfrogCommand} rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token %ARTIFACTORY_ACCESS_TOKEN% --flat target/construction-project-1.0-SNAPSHOT.war"
+            def jfrogCommand = bat(script: 'where jfrog', returnStatus: true)
+            
+            if (jfrogCommand == 0) {
+                echo "JFrog CLI encontrado en la ruta."
+                bat "jfrog rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token %ARTIFACTORY_ACCESS_TOKEN% --flat target/construction-project-1.0-SNAPSHOT.war"
             } else {
                 error 'JFrog CLI no encontrado. Asegúrate de que esté instalado y disponible en el PATH.'
             }
         }
     }
 }
-
 
         stage('Pruebas') {
             steps {
