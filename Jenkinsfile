@@ -12,16 +12,12 @@ pipeline {
     stages {
         stage('Obtener código fuente') {
             steps {
+                  echo "ARTIFACTORY_ACCESS_TOKEN: ${ARTIFACTORY_ACCESS_TOKEN}"
                 // Clonar el repositorio Git
                 git 'https://github.com/Neil-Vilarroel/login-iplacex.git'
             }
         }
-tage('Print Access Token') {
-            steps {
-                script {
-                    echo "ARTIFACTORY_ACCESS_TOKEN: ${ARTIFACTORY_ACCESS_TOKEN}"
-                }
-            }
+
         stage('Análisis del código') {
             steps {
                 // Ejecutar el análisis estático de código (puede ser SonarQube, etc.)
