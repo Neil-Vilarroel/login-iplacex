@@ -21,14 +21,14 @@
             <enabled>false</enabled>
           </snapshots>
           <id>central</id>
-          <name>default-libs-release</name>
-          <url>https://nvillarroel.jfrog.io/artifactory/default-libs-release</url>
+          <name>java-web-app</name>
+          <url>https://nvillarroel.jfrog.io/ui/native/java-web-app</url>
         </repository>
         <repository>
           <snapshots />
           <id>snapshots</id>
-          <name>default-libs-snapshot</name>
-          <url>https://nvillarroel.jfrog.io/artifactory/default-libs-snapshot</url>
+          <name>java-web-app</name>
+          <url>https://nvillarroel.jfrog.io/ui/native/java-web-app</url>
         </repository>
       </repositories>
       <pluginRepositories>
@@ -37,14 +37,14 @@
             <enabled>false</enabled>
           </snapshots>
           <id>central</id>
-          <name>default-libs-release</name>
-          <url>https://nvillarroel.jfrog.io/artifactory/default-libs-release</url>
+          <name>java-web-app</name>
+          <url>https://nvillarroel.jfrog.io/ui/native/java-web-app</url>
         </pluginRepository>
         <pluginRepository>
           <snapshots />
           <id>snapshots</id>
-          <name>default-libs-snapshot</name>
-          <url>https://nvillarroel.jfrog.io/artifactory/default-libs-snapshot</url>
+          <name>java-web-app</name>
+          <url>https://nvillarroel.jfrog.io/ui/native/java-web-app</url>
         </pluginRepository>
       </pluginRepositories>
       <id>artifactory</id>
