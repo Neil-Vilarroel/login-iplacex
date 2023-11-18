@@ -21,7 +21,7 @@ pipeline {
         stage('Análisis del código') {
             steps {
                 // Ejecutar el análisis estático de código (puede ser SonarQube, etc.)
-                bat 'mvn clean install'
+                bat 'mvn clean install -s settings.xml'
             }
         }
 
@@ -36,7 +36,7 @@ pipeline {
         stage('Pruebas') {
             steps {
                 script {
-                    bat 'mvn test'
+                    bat 'mvn test -s settings.xml'
                 }
             }
         }
@@ -45,7 +45,7 @@ pipeline {
             steps {
                 // Realizar el deployment del proyecto
                 script {
-                    bat 'mvn clean deploy'
+                    bat 'mvn clean deploy -s settings.xml'
                 }
             }
         }
@@ -57,15 +57,6 @@ pipeline {
         }
         failure {
             echo 'El Pipeline falló. Revisa los registros para más detalles.'
-        }
-    }
-
-    options {
-        script {
-            def mavenSettings = readFile 'settings.xml'
-            withEnv(["MAVEN_OPTS=-Duser.home=${env.WORKSPACE}", "MVN_SETTINGS=${mavenSettings}"]) {
-                // This ensures Maven uses the correct settings.xml
-            }
         }
     }
 }
