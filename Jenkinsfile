@@ -3,6 +3,11 @@ pipeline {
 
     tools {
         maven 'Maven'
+    }  
+
+    environment {
+        CLI = true
+        ARTIFACTORY_ACCESS_TOKEN = credentials('artifactory-access-token')
     }
 
     stages {
@@ -18,6 +23,20 @@ pipeline {
                 // Ejecutar el análisis estático de código (puede ser SonarQube, etc.)
                 script {
                     bat 'mvn clean install'
+                }
+            }
+        }
+
+        stage('Upload to Artifactory') {
+            steps {
+                script {
+                    try {
+                        // Reemplaza la URL y el nombre del archivo según tu configuración
+                        sh 'jfrog rt upload --url https://nvillarroel.jfrog.io/artifactory/ --apikey ${ARTIFACTORY_ACCESS_TOKEN} target/construction-project-1.0-SNAPSHOT.war'
+                    } catch (Exception e) {
+                        currentBuild.result = 'FAILURE'
+                        error("Error durante la carga a Artifactory: ${e.message}")
+                    }
                 }
             }
         }
