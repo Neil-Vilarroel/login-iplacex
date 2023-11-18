@@ -22,6 +22,14 @@ pipeline {
             }
         }
 
+        stage('Pruebas') {
+            steps {
+                script {
+                    bat 'mvn test'
+                }
+            }
+        }
+
         stage('Deployment') {
             steps {
                 // Realizar el deployment del proyecto
@@ -29,6 +37,15 @@ pipeline {
                     bat 'mvn clean deploy'
                 }
             }
+        }
+    }
+
+    post {
+        success {
+            echo 'El Pipeline se ejecutó con éxito.'
+        }
+        failure {
+            echo 'El Pipeline falló. Revisa los registros para más detalles.'
         }
     }
 }
