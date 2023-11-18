@@ -37,25 +37,22 @@ pipeline {
 stage('Upload to Artifactory') {
     steps {
         script {
-            def jfrogCommand = bat(script: 'where jfrog', returnStatus: true).trim()
+            def jfrogExecutable = "C:\\ProgramData\\chocolatey\\bin\\jfrog.exe"
+            def uploadCommand = "${jfrogExecutable} rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token %ARTIFACTORY_ACCESS_TOKEN% --flat target/construction-project-1.0-SNAPSHOT.war"
 
-            if (jfrogCommand == 0) {
-                echo "JFrog CLI encontrado en la ruta."
-                def uploadCommandOutput = bat(script: 'jfrog rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token %ARTIFACTORY_ACCESS_TOKEN% --flat target/construction-project-1.0-SNAPSHOT.war', returnStdout: true).trim()
-                
-                echo "Salida del comando de carga: ${uploadCommandOutput}"
+            def uploadCommandOutput = bat(script: uploadCommand, returnStatus: true, returnStdout: true).trim()
 
-                if (uploadCommandOutput.contains("Uploaded")) {
-                    echo "Archivo cargado exitosamente en Artifactory."
-                } else {
-                    error "Error al cargar el archivo en Artifactory. La salida del comando no contiene 'Uploaded'."
-                }
+            echo "Salida del comando de carga: ${uploadCommandOutput}"
+
+            if (uploadCommandOutput.contains("Uploaded")) {
+                echo "Archivo cargado exitosamente en Artifactory."
             } else {
-                error 'JFrog CLI no encontrado. Asegúrate de que esté instalado y disponible en el PATH.'
+                error "Error al cargar el archivo en Artifactory. La salida del comando no contiene 'Uploaded'."
             }
         }
     }
 }
+
 
         stage('Pruebas') {
             steps {
