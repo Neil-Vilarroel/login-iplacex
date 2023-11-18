@@ -6,7 +6,6 @@ pipeline {
     }  
 
     environment {
-        CLI = true
         ARTIFACTORY_ACCESS_TOKEN = credentials('artifactory-access-token')
     }
 
@@ -27,16 +26,24 @@ pipeline {
             }
         }
 
+        stage('Instalar JFrog CLI') {
+            steps {
+                script {
+                    bat 'choco install jfrog-cli -y'
+                }
+            }
+        }
+
         stage('Upload to Artifactory') {
             steps {
                 script {
-             try {
-                // Reemplaza la URL y el nombre del archivo según tu configuración
-                bat 'jfrog rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token ${ARTIFACTORY_ACCESS_TOKEN} --flat target/construction-project-1.0-SNAPSHOT.war'
-            } catch (Exception e) {
-                currentBuild.result = 'FAILURE'
-                error("Error durante la carga a Artifactory: ${e.message}")
-            }
+                    try {
+                        // Reemplaza la URL y el nombre del archivo según tu configuración
+                        bat 'jfrog rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token ${ARTIFACTORY_ACCESS_TOKEN} --flat target/construction-project-1.0-SNAPSHOT.war'
+                    } catch (Exception e) {
+                        currentBuild.result = 'FAILURE'
+                        error("Error durante la carga a Artifactory: ${e.message}")
+                    }
                 }
             }
         }
