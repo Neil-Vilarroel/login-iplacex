@@ -27,14 +27,8 @@ pipeline {
         }
 
         stage('Upload to Artifactory') {
-            agent {
-                docker {
-                    image 'releases-docker.jfrog.io/jfrog/jfrog-cli-v2:2.2.0' 
-                    reuseNode true
-                }
-            }
             steps {
-                sh 'jfrog rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token ${ARTIFACTORY_ACCESS_TOKEN} target/construction-project-1.0-SNAPSHOT.war java-web-app/'
+                bat 'jfrog rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token ${ARTIFACTORY_ACCESS_TOKEN} target/construction-project-1.0-SNAPSHOT.war java-web-app/'
             }
         }
 
