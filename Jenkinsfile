@@ -61,6 +61,11 @@ pipeline {
     }
 
     options {
-        withMaven(mavenSettingsConfig: 'mi_configuracion_de_maven_personalizada', mavenLocalRepo: '.m2/repository')
+        script {
+            def mavenSettings = readFile 'settings.xml'
+            withEnv(["MAVEN_OPTS=-Duser.home=${env.WORKSPACE}", "MVN_SETTINGS=${mavenSettings}"]) {
+                // This ensures Maven uses the correct settings.xml
+            }
+        }
     }
 }
