@@ -37,7 +37,7 @@ pipeline {
 stage('Upload to Artifactory') {
     steps {
         script {
-            def jfrogCommand = bat(script: 'where jfrog', returnStatus: true).trim()
+            def jfrogCommand = bat(script: 'where jfrog', returnStatus: true).text.trim()
 
             if (jfrogCommand == 0) {
                 echo "JFrog CLI encontrado en la ruta."
