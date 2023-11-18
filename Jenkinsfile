@@ -3,7 +3,6 @@ pipeline {
 
     tools {
         maven 'Maven'
-        docker 'docker' // Asegúrate de que 'docker' es el nombre del tool instalado en Jenkins
     }  
 
     environment {
@@ -13,7 +12,7 @@ pipeline {
     stages {
         stage('Obtener código fuente') {
             steps {
-                  echo "ARTIFACTORY_ACCESS_TOKEN: ${ARTIFACTORY_ACCESS_TOKEN}"
+                echo "ARTIFACTORY_ACCESS_TOKEN: ${ARTIFACTORY_ACCESS_TOKEN}"
                 // Clonar el repositorio Git
                 git 'https://github.com/Neil-Vilarroel/login-iplacex.git'
             }
@@ -39,6 +38,12 @@ pipeline {
         */
 
         stage('Upload to Artifactory') {
+            agent {
+                docker {
+                    image 'releases-docker.jfrog.io/jfrog/jfrog-cli-v2:2.2.0' 
+                    reuseNode true
+                }
+            }
             steps {
                 script {
                     bat 'jfrog rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token %ARTIFACTORY_ACCESS_TOKEN% target/construction-project-1.0-SNAPSHOT.war java-web-app/'
