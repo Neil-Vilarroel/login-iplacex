@@ -38,9 +38,15 @@ stage('Upload to Artifactory') {
     steps {
         script {
             def jfrogExecutable = "C:\\ProgramData\\chocolatey\\bin\\jfrog.exe"
-            def uploadCommand = "${jfrogExecutable} rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token %ARTIFACTORY_ACCESS_TOKEN% --flat target/construction-project-1.0-SNAPSHOT.war"
+            def uploadCommand = [
+                "${jfrogExecutable}",
+                "rt", "u",
+                "--url", "https://nvillarroel.jfrog.io/artifactory/",
+                "--access-token", "%ARTIFACTORY_ACCESS_TOKEN%",
+                "--flat", "target/construction-project-1.0-SNAPSHOT.war"
+            ]
 
-            def uploadCommandOutput = bat(script: uploadCommand, returnStatus: true, returnStdout: true).trim()
+            def uploadCommandOutput = bat(script: uploadCommand.join(' '), returnStatus: true, returnStdout: true).trim()
 
             echo "Salida del comando de carga: ${uploadCommandOutput}"
 
@@ -52,6 +58,7 @@ stage('Upload to Artifactory') {
         }
     }
 }
+
 
 
         stage('Pruebas') {
