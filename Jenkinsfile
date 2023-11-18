@@ -1,18 +1,14 @@
 pipeline {
-    agent none
+    agent any
 
     tools {
         maven 'Maven'
     }  
 
-    environment {
-        ARTIFACTORY_ACCESS_TOKEN = credentials('artifactory-access-token')
-    }
-
     stages {
         stage('Obtener código fuente') {
             steps {
-                echo "ARTIFACTORY_ACCESS_TOKEN: ${ARTIFACTORY_ACCESS_TOKEN}"
+            
                 // Clonar el repositorio Git
                 git 'https://github.com/Neil-Vilarroel/login-iplacex.git'
             }
@@ -25,13 +21,7 @@ pipeline {
             }
         }
 
-        stage('Upload to Artifactory') {
-            steps {
-                script {
-                    bat 'jfrog rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token %ARTIFACTORY_ACCESS_TOKEN% target/construction-project-1.0-SNAPSHOT.war java-web-app/'
-                }
-            }
-        }
+
 
         stage('Pruebas') {
             steps {
