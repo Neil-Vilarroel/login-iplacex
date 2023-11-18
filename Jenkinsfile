@@ -1,5 +1,5 @@
 pipeline {
-    agent any
+    agent none
 
     tools {
         maven 'Maven'
@@ -12,7 +12,7 @@ pipeline {
     stages {
         stage('Obtener código fuente') {
             steps {
-                  echo "ARTIFACTORY_ACCESS_TOKEN: ${ARTIFACTORY_ACCESS_TOKEN}"
+                echo "ARTIFACTORY_ACCESS_TOKEN: ${ARTIFACTORY_ACCESS_TOKEN}"
                 // Clonar el repositorio Git
                 git 'https://github.com/Neil-Vilarroel/login-iplacex.git'
             }
@@ -21,29 +21,14 @@ pipeline {
         stage('Análisis del código') {
             steps {
                 // Ejecutar el análisis estático de código (puede ser SonarQube, etc.)
-                script {
-                    bat 'mvn clean install'
-                }
+                bat 'mvn clean install'
             }
         }
-
-        /*
-        stage('Instalar JFrog CLI') {
-            steps {
-                script {
-                    bat 'choco install jfrog-cli -y'
-                }
-            }
-        }
-        */
 
         stage('Upload to Artifactory') {
-            agent any
             steps {
                 script {
-                    // Configurar el entorno Docker aquí si es necesario
-                    // docker.image('releases-docker.jfrog.io/jfrog/jfrog-cli-v2:2.2.0').run('-v', '/var/run/docker.sock:/var/run/docker.sock')
-                    bat 'jfrog rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token ${ARTIFACTORY_ACCESS_TOKEN} target/construction-project-1.0-SNAPSHOT.war java-web-app/'
+                    bat 'jfrog rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token %ARTIFACTORY_ACCESS_TOKEN% target/construction-project-1.0-SNAPSHOT.war java-web-app/'
                 }
             }
         }
@@ -73,5 +58,9 @@ pipeline {
         failure {
             echo 'El Pipeline falló. Revisa los registros para más detalles.'
         }
+    }
+
+    options {
+        withMaven(mavenSettingsConfig: 'mi_configuracion_de_maven_personalizada', mavenLocalRepo: '.m2/repository')
     }
 }
