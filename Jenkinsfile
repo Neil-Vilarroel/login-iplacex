@@ -32,7 +32,7 @@ pipeline {
                 script {
              try {
                 // Reemplaza la URL y el nombre del archivo según tu configuración
-                sh 'jfrog rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token ${ARTIFACTORY_ACCESS_TOKEN} --flat target/construction-project-1.0-SNAPSHOT.war'
+                bat 'jfrog rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token ${ARTIFACTORY_ACCESS_TOKEN} --flat target/construction-project-1.0-SNAPSHOT.war'
             } catch (Exception e) {
                 currentBuild.result = 'FAILURE'
                 error("Error durante la carga a Artifactory: ${e.message}")
