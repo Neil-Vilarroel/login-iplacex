@@ -14,14 +14,16 @@ pipeline {
             steps {
                 echo "ARTIFACTORY_ACCESS_TOKEN: ${ARTIFACTORY_ACCESS_TOKEN}"
                 // Clonar el repositorio Git
-                git 'https://github.com/Neil-Vilarroel/login-iplacex.git'
+                node {
+                    git 'https://github.com/Neil-Vilarroel/login-iplacex.git'
+                }
             }
         }
 
         stage('Análisis del código') {
             steps {
                 // Ejecutar el análisis estático de código (puede ser SonarQube, etc.)
-                script {
+                node {
                     bat 'mvn clean install'
                 }
             }
@@ -29,16 +31,20 @@ pipeline {
 
         stage('Upload to Artifactory') {
             steps {
-                script {
-                    bat 'jfrog rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token %ARTIFACTORY_ACCESS_TOKEN% target/construction-project-1.0-SNAPSHOT.war java-web-app/'
+                node {
+                    script {
+                        bat 'jfrog rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token %ARTIFACTORY_ACCESS_TOKEN% target/construction-project-1.0-SNAPSHOT.war java-web-app/'
+                    }
                 }
             }
         }
 
         stage('Pruebas') {
             steps {
-                script {
-                    bat 'mvn test'
+                node {
+                    script {
+                        bat 'mvn test'
+                    }
                 }
             }
         }
@@ -46,8 +52,10 @@ pipeline {
         stage('Deployment') {
             steps {
                 // Realizar el deployment del proyecto
-                script {
-                    bat 'mvn clean deploy'
+                node {
+                    script {
+                        bat 'mvn clean deploy'
+                    }
                 }
             }
         }
