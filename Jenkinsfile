@@ -34,19 +34,21 @@ pipeline {
             }
         }
 
-        stage('Upload to Artifactory') {
+stage('Upload to Artifactory') {
     steps {
         script {
-            try {
-                // Reemplaza la URL y el nombre del archivo según tu configuración
-                bat "jfrog rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token %ARTIFACTORY_ACCESS_TOKEN% --flat target/construction-project-1.0-SNAPSHOT.war"
-            } catch (Exception e) {
-                currentBuild.result = 'FAILURE'
-                error("Error durante la carga a Artifactory: ${e.message}")
+            def jfrogCommand = bat(script: 'where jfrog', returnStatus: true).trim()
+
+            if (jfrogCommand) {
+                echo "JFrog CLI encontrado en la ruta: ${jfrogCommand}"
+                bat "\"${jfrogCommand}\" rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token %ARTIFACTORY_ACCESS_TOKEN% --flat target/construction-project-1.0-SNAPSHOT.war"
+            } else {
+                error 'JFrog CLI no encontrado. Asegúrate de que esté instalado y disponible en el PATH.'
             }
         }
     }
 }
+
 
 
         stage('Pruebas') {
