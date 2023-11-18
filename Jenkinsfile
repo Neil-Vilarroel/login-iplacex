@@ -34,29 +34,18 @@ pipeline {
             }
         }
 */
-stage('Upload to Artifactory') {
-    steps {
-        script {
-            def jfrogExecutable = "C:\\ProgramData\\chocolatey\\bin\\jfrog.exe"
-            def uploadCommand = [
-                "${jfrogExecutable}",
-                "rt", "u",
-                "--url", "https://nvillarroel.jfrog.io/artifactory/",
-                "--access-token", "%ARTIFACTORY_ACCESS_TOKEN%",
-                "--flat", "target/construction-project-1.0-SNAPSHOT.war"
-            ]
-
-            def uploadCommandOutput = bat(script: uploadCommand.join(' '), returnStatus: true, returnStdout: true).trim()
-
-            echo "Salida del comando de carga: ${uploadCommandOutput}"
-
-            if (uploadCommandOutput.contains("Uploaded")) {
-                echo "Archivo cargado exitosamente en Artifactory."
-            } else {
-                error "Error al cargar el archivo en Artifactory. La salida del comando no contiene 'Uploaded'."
-            }
+    stage('Upload to Artifactory') {
+      agent {
+        docker {
+          image 'releases-docker.jfrog.io/jfrog/jfrog-cli-v2:2.2.0' 
+          reuseNode true
         }
+      }
+      steps {
+        sh 'jfrog rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token ${ARTIFACTORY_ACCESS_TOKEN} target/construction-project-1.0-SNAPSHOT.war java-web-app/'
+      }
     }
+  }
 }
 
 
