@@ -1,5 +1,5 @@
 pipeline {
-    agent none
+    agent any
 
     tools {
         maven 'Maven'
@@ -12,39 +12,46 @@ pipeline {
     stages {
         stage('Obtener código fuente') {
             steps {
-                echo "ARTIFACTORY_ACCESS_TOKEN: ${ARTIFACTORY_ACCESS_TOKEN}"
+                  echo "ARTIFACTORY_ACCESS_TOKEN: ${ARTIFACTORY_ACCESS_TOKEN}"
                 // Clonar el repositorio Git
-                node('etiqueta_del_nodo') {
-                    git 'https://github.com/Neil-Vilarroel/login-iplacex.git'
-                }
+                git 'https://github.com/Neil-Vilarroel/login-iplacex.git'
             }
         }
 
         stage('Análisis del código') {
             steps {
                 // Ejecutar el análisis estático de código (puede ser SonarQube, etc.)
-                node('etiqueta_del_nodo') {
+                script {
                     bat 'mvn clean install'
                 }
             }
         }
 
-        stage('Upload to Artifactory') {
+        /*
+        stage('Instalar JFrog CLI') {
             steps {
-                node('etiqueta_del_nodo') {
-                    script {
-                        bat 'jfrog rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token %ARTIFACTORY_ACCESS_TOKEN% target/construction-project-1.0-SNAPSHOT.war java-web-app/'
-                    }
+                script {
+                    bat 'choco install jfrog-cli -y'
+                }
+            }
+        }
+        */
+
+        stage('Upload to Artifactory') {
+            agent any
+            steps {
+                script {
+                    // Configurar el entorno Docker aquí si es necesario
+                    // docker.image('releases-docker.jfrog.io/jfrog/jfrog-cli-v2:2.2.0').run('-v', '/var/run/docker.sock:/var/run/docker.sock')
+                    bat 'jfrog rt upload --url https://nvillarroel.jfrog.io/artifactory/ --access-token ${ARTIFACTORY_ACCESS_TOKEN} target/construction-project-1.0-SNAPSHOT.war java-web-app/'
                 }
             }
         }
 
         stage('Pruebas') {
             steps {
-                node('etiqueta_del_nodo') {
-                    script {
-                        bat 'mvn test'
-                    }
+                script {
+                    bat 'mvn test'
                 }
             }
         }
@@ -52,10 +59,8 @@ pipeline {
         stage('Deployment') {
             steps {
                 // Realizar el deployment del proyecto
-                node('etiqueta_del_nodo') {
-                    script {
-                        bat 'mvn clean deploy'
-                    }
+                script {
+                    bat 'mvn clean deploy'
                 }
             }
         }
