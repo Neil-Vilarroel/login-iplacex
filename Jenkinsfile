@@ -12,10 +12,10 @@ pipeline {
                 script {
                     // Comando para iniciar sesión en el repositorio Docker de JFrog Artifactory
                     def dockerLoginCmd = "docker login -u ${JFROG_USERNAME} -p ${JFROG_TOKEN} nvillarroel.jfrog.io"
-                    sh dockerLoginCmd
+                    bat dockerLoginCmd
 
                     // Clonar el repositorio Git
-                    git 'https://tu-usuario-git@github.com/Neil-Vilarroel/login-iplacex.git'
+                    git 'https://github.com/Neil-Vilarroel/login-iplacex.git'
                 }
             }
         }
@@ -39,7 +39,7 @@ pipeline {
                     writeFile(file: '.m2/settings.xml', text: mavenSettings)
 
                     // Construir y publicar en Artifactory
-                    sh 'mvn clean install deploy'
+                    bat 'mvn clean install deploy'
                 }
             }
         }
@@ -51,7 +51,7 @@ pipeline {
             steps {
                 script {
                     // Cerrar sesión de Docker al final del pipeline
-                    sh 'docker logout nvillarroel.jfrog.io'
+                    bat 'docker logout nvillarroel.jfrog.io'
                 }
             }
         }
