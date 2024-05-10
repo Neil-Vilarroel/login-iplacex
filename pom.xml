@@ -1,54 +1,60 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-     <modelVersion>4.0.0</modelVersion>
-    <groupId>com.myconstruction</groupId>
-    <artifactId>construction-project</artifactId>
+    <groupId>com.mycompany</groupId>
+    <artifactId>myconstruction</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>war</packaging> 
+    <packaging>war</packaging>
 
-    <dependencies>
-        <!-- Dependencia para Java EE (Servlet API) -->
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+     <dependencies>
+        <!-- Java EE -->
         <dependency>
             <groupId>javax</groupId>
             <artifactId>javaee-api</artifactId>
             <version>8.0</version>
-            <scope>provided</scope>
+            <scope>provided</scope> <!-- Cambiado a 'provided' para indicar que se espera que el contenedor de la aplicación proporcione estas clases -->
         </dependency>
-<dependency>
-    <groupId>javax.servlet</groupId>
-    <artifactId>jstl</artifactId>
-    <version>1.2</version>
-</dependency>
-
-        <!-- Dependencia para MySQL Connector/J -->
+        <!-- Servlet API -->
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>javax.servlet-api</artifactId>
+            <version>4.0.1</version>
+            <scope>provided</scope> <!-- Cambiado a 'provided' para indicar que se espera que el contenedor de la aplicación proporcione estas clases -->
+        </dependency>
+        <!-- JSP API -->
+        <dependency>
+            <groupId>javax.servlet.jsp</groupId>
+            <artifactId>javax.servlet.jsp-api</artifactId>
+            <version>2.3.3</version>
+            <scope>provided</scope> <!-- Cambiado a 'provided' para indicar que se espera que el contenedor de la aplicación proporcione estas clases -->
+        </dependency>
+        <!-- MySQL Connector -->
         <dependency>
             <groupId>mysql</groupId>
             <artifactId>mysql-connector-java</artifactId>
-            <version>8.0.26</version>
+            <version>8.0.27</version>
         </dependency>
-             
+        <!-- Agregar otra librería de tu elección -->
+        <!-- Por ejemplo, Apache Commons Lang -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-lang3</artifactId>
+            <version>3.12.0</version>
+        </dependency>
     </dependencies>
-           <build>
+      <build>
         <plugins>
-            <!-- ... Otros plugins ... -->
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-deploy-plugin</artifactId>
-                <version>3.1.1</version>
-                <configuration>
-                    <skip>true</skip>
-                </configuration>
+                <artifactId>maven-war-plugin</artifactId>
+                <version>3.3.2</version> <!-- Esta es una versión específica, puedes cambiarla según tus necesidades -->
             </plugin>
         </plugins>
     </build>
-    <distributionManagement>
-    <repository>
-        <id>central</id>
-        <name>b0ddm5a6ki2jp-artifactory-primary-0-releases</name>
-        <url>https://nvillarroel.jfrog.io/artifactory/default-libs-release</url>
-    </repository>
-</distributionManagement>
 </project>
-
